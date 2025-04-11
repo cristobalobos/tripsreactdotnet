@@ -9,12 +9,7 @@ namespace Trips.Data
         {
             Data.Trips.Add(trip);
         }
-
-        public void DeleteTrip(int tripId)
-        {
-            throw new System.NotImplementedException();
-        }
-
+       
         public List<Trip> GetAllTrips() => Data.Trips.ToList();
 
         public Trip GetTripById(int tripId)
@@ -34,5 +29,14 @@ namespace Trips.Data
                 oldTrip.DateCompleted = trip.DateCompleted;
             }
         }
+          public void DeleteTrip(int tripId)
+        {
+            var trip = Data.Trips.FirstOrDefault(n => n.Id == tripId);
+            if(trip != null)
+            {
+                Data.Trips.Remove(trip);
+            }
+        }
+
     }
 }
