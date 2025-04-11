@@ -1,45 +1,46 @@
-# Proyecto React + ASP.NET Core
+# Proyecto de Gestión de Viajes
 
-Aplicación full stack que integra un frontend en React con una API backend en ASP.NET Core. Generada con el comando `dotnet new react`.
+Este es un proyecto simple que permite gestionar viajes mediante una API REST. El objetivo es practicar el desarrollo con servicios, modelos de datos e inyección de dependencias en una aplicación en C#.
 
-## 🗂 Estructura del Proyecto
+## Estructura del Proyecto
 
-## ⚙️ Backend: API en ASP.NET Core
+El proyecto está estructurado de la siguiente manera:
 
-### Program.cs
+### 1. **Carpeta "Datos"**
 
-- Contiene `Main()` y llama a `CreateWebHostBuilder()`.
-- Usa `UseStartup<Startup>()` para configurar la app.
+- Esta carpeta contiene todos los archivos relacionados con los datos, como los modelos y los servicios.
 
-### Startup.cs
+### 2. **Carpeta "Modelos"**
 
-- `ConfigureServices`: Agrega servicios con inyección de dependencias.
-- `Configure`: Define el middleware para manejar solicitudes HTTP.
+- Dentro de esta carpeta se encuentran las definiciones de los modelos de datos. Por ejemplo, el modelo `Trip.cs`, que representa un viaje con propiedades como `Id`, `Nombre`, `Descripción`, `DateStarted`, y `DateCompleted`.
 
-### Controllers
+### 3. **Carpeta "Servicios"**
 
-- Define los endpoints de la API.
-- Ejemplo: `TripsController` para gestionar viajes.
+- Aquí se encuentran los servicios que interactúan con los modelos de datos. Los servicios se encargan de la lógica de negocio, como obtener viajes, agregar nuevos viajes, actualizar, eliminar, etc.
 
-## 🧩 Frontend: Aplicación React (ClientApp)
+## Creación de Modelos de Datos
 
-### /public
+Para trabajar con los datos, se crea un modelo que representa un viaje en nuestra aplicación. En el archivo `Trip.cs` definimos una clase `Trip` dentro del espacio de nombres `Trips.Data`. El modelo tiene las siguientes propiedades:
 
-- `index.html`: Único archivo HTML, contiene `<div id="root">` donde se monta React.
+- `Id`: Un identificador único para el viaje.
+- `Nombre`: El nombre del viaje.
+- `Descripción`: Una breve descripción del viaje.
+- `DateStarted`: La fecha de inicio del viaje.
+- `DateCompleted`: La fecha de finalización del viaje (opcional, ya que no todos los viajes están completos).
 
-### /src
+## Creación de Servicios Ficticios
 
-- `index.js`: Inicializa React apuntando al div con id `root`.
-- `App.js`: Componente principal que agrupa los demás.
-- `/components`: Componentes reutilizables (ej. `Counter`, `FetchData`, `NavMenu.js`).
-- `Layout.js`: Define el diseño general de la app (ej. NavMenu + contenedor).
+El siguiente paso es crear servicios que manipulen los datos. Los servicios permiten realizar operaciones sobre los viajes, como obtener todos los viajes, obtener un viaje por su ID, actualizar un viaje, eliminar un viaje y agregar un nuevo viaje. Para esto, se creó la interfaz `ITripService.cs` dentro de la carpeta `Servicios`, que define los métodos necesarios.
 
----
+La clase `TripService.cs` implementa esta interfaz y contiene la lógica de negocio para realizar estas operaciones. Debido a que no estamos conectando nuestra aplicación a una base de datos, los datos se gestionan en memoria a través de una lista estática en el archivo `Data.cs`, que simula la base de datos con algunos viajes predefinidos.
 
-## 🧪 Comunicación entre React y la API
+## Inyección de Dependencias
 
-> (Este apartado se puede completar cuando implementes las llamadas fetch o axios hacia los endpoints de la API)
+Para que los servicios estén disponibles en toda la aplicación, se configura la inyección de dependencias en el archivo `Startup.cs`. En el método `ConfigureServices`, se agrega la configuración para que `ITripService` sea inyectado con su implementación `TripService`. Esto permite que los servicios se puedan utilizar en los controladores de la API y otras partes de la aplicación.
 
-## 📦 Despliegue
-
-> (Agregar detalles sobre publicación en IIS, Azure, Vercel u otro entorno)
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddTransient<ITripService, TripService>();
+}
+```
