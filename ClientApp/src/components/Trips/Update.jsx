@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-// This component lets the user create a new trip
-export class Create extends Component {
+export class Update extends Component {
     constructor(props) {
         super(props);
 
-        // Bind functions to the component
         this.onChangeName = this.onChangeName.bind(this);
         this.onChangeDescription = this.onChangeDescription.bind(this);
         this.onChangeDateStarted = this.onChangeDateStarted.bind(this);
         this.onChangeDateCompleted = this.onChangeDateCompleted.bind(this);
+        this.onUpdateCancel = this.onUpdateCancel.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
-        // Initial state (empty form)
         this.state = {
             name: '',
             description: '',
@@ -22,62 +20,74 @@ export class Create extends Component {
         }
     }
 
-    // Update name in the state when the input changes
+    componentDidMount() {
+        const { id } = this.props.match.params;
+
+        axios.get("api/Trips/SingleTrip/" + id).then(trip => {
+            const response = trip.data;
+
+            this.setState({
+                name: response.name,
+                description: response.description,
+                dateStarted: new Date(response.dateStarted).toISOString().slice(0, 10),
+                dateCompleted: response.dateCompleted ? new Date(response.dateCompleted).toISOString().slice(0, 10) : null
+            })
+        })
+    }
+
+
     onChangeName(e) {
         this.setState({
             name: e.target.value
         });
     }
 
-    // Update description when the user types in the textarea
     onChangeDescription(e) {
         this.setState({
             description: e.target.value
         });
     }
 
-    // Update the start date
     onChangeDateStarted(e) {
         this.setState({
             dateStarted: e.target.value
         });
     }
 
-    // Update the completion date
     onChangeDateCompleted(e) {
         this.setState({
             dateCompleted: e.target.value
         });
     }
 
-    // Called when the form is submitted
-    onSubmit(e) {
-        e.preventDefault(); // Stop default form action
-
+    onUpdateCancel() {
         const { history } = this.props;
+        history.push('/trips');
+    }
 
-        // Create a new trip object with values from the form
+    onSubmit(e) {
+        e.preventDefault();
+        const { history } = this.props;
+        const { id } = this.props.match.params;
+
         let tripObject = {
-            Id: Math.floor(Math.random() * 1000), // Random ID (not ideal in real apps)
             name: this.state.name,
             description: this.state.description,
-            dateStarted: this.state.dateStarted,
-            dateCompleted: this.state.dateCompleted
+            dateStarted: new Date(this.state.dateStarted).toISOString(),
+            dateCompleted: this.state.dateCompleted ? new Date(this.state.dateCompleted).toISOString() : null
         }
 
-        // Send the trip to the API (backend)
-        axios.post("api/Trips/AddTrip", tripObject).then(result => {
-            // If the request is successful, go to the trips list page
+        axios.put("api/Trips/UpdateTrip/" + id, tripObject).then(result => {
             history.push('/trips');
-        });
+        })
+
     }
 
     render() {
         return (
-            <div className="trip-form">
-                <h3>Add new trip</h3>
+            <div className="trip-form" >
+                <h3>Update trip</h3>
                 <form onSubmit={this.onSubmit}>
-                    {/* Input for the trip name */}
                     <div className="form-group">
                         <label>Trip name:  </label>
                         <input
@@ -87,8 +97,6 @@ export class Create extends Component {
                             onChange={this.onChangeName}
                         />
                     </div>
-
-                    {/* Input for the description */}
                     <div className="form-group">
                         <label>Trip description: </label>
                         <textarea
@@ -98,9 +106,7 @@ export class Create extends Component {
                             onChange={this.onChangeDescription}
                         />
                     </div>
-
                     <div className="row">
-                        {/* Input for start date */}
                         <div className="col col-md-6 col-sm-6 col-xs-12">
                             <div className="form-group">
                                 <label>Date of start:  </label>
@@ -112,8 +118,6 @@ export class Create extends Component {
                                 />
                             </div>
                         </div>
-
-                        {/* Input for completion date */}
                         <div className="col col-md-6 col-sm-6 col-xs-12">
                             <div className="form-group">
                                 <label>Date of completion:  </label>
@@ -127,9 +131,10 @@ export class Create extends Component {
                         </div>
                     </div>
 
-                    {/* Submit button */}
+
                     <div className="form-group">
-                        <input type="submit" value="Add trip" className="btn btn-primary" />
+                        <button onClick={this.onUpdateCancel} className="btn btn-default">Cancel</button>
+                        <button type="submit" className="btn btn-success">Update</button>
                     </div>
                 </form>
             </div>

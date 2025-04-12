@@ -43,6 +43,7 @@ namespace Trips.Controllers
             return Ok(trip);
         }
 
+
         [HttpDelete("DeleteTrip/{id}")]
         public IActionResult DeleteTrip(int id)
         {

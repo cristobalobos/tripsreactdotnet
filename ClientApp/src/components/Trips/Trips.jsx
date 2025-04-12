@@ -1,9 +1,10 @@
-import React, { Component } from "react";
-import axios from 'axios'
-
+import React, { Component } from 'react';
+import axios from 'axios';
 export class Trips extends Component {
     constructor(props) {
         super(props);
+
+        this.onTripUpdate = this.onTripUpdate.bind(this);
 
         this.state = {
             trips: [],
@@ -15,10 +16,15 @@ export class Trips extends Component {
         this.populateTripsData();
     }
 
+    onTripUpdate(id) {
+        const { history } = this.props;
+        history.push('/update/' + id);
+    }
+
     populateTripsData() {
         axios.get("api/Trips/GetTrips").then(result => {
             const response = result.data;
-            this.setState({ trips: response, loading: false })
+            this.setState({ trips: response, loading: false });
         })
     }
 
@@ -40,23 +46,29 @@ export class Trips extends Component {
                             <tr key={trip.id}>
                                 <td>{trip.name}</td>
                                 <td>{trip.description}</td>
-                                <td>{new Date(trip.dateStarted).toLocaleDateString()}</td>
-                                <td>{trip.dateCompleted ? new Date(trip.dateCompleted).toLocaleDateString() : '-'}</td>
-                                <td> - </td>
+                                <td>{new Date(trip.dateStarted).toISOString().slice(0, 10)}</td>
+                                <td>{trip.dateCompleted ? new Date(trip.dateCompleted).toISOString().slice(0, 10) : '-'}</td>
+                                <td>
+                                    <div className="form-group">
+                                        <button onClick={() => this.onTripUpdate(trip.id)} className="btn btn-success">
+                                            Update
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                         ))
                     }
+
                 </tbody>
             </table>
         );
     }
 
-
     render() {
 
         let content = this.state.loading ? (
             <p>
-                <em>Loadingx...</em>
+                <em>Loading...</em>
             </p>
         ) : (
             this.renderAllTripsTable(this.state.trips)
