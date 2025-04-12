@@ -5,6 +5,8 @@ import { Home } from "./components/Home";
 import { Trips } from "./components/Trips/Trips";
 import { Create } from "./components/Trips/Create";
 import { Update } from "./components/Trips/Update";
+import { Delete } from "./components/Trips/Delete";
+import "./custom.css";
 
 export default class App extends Component {
   static displayName = App.name;
@@ -16,6 +18,7 @@ export default class App extends Component {
         <Route path="/create" component={Create} />
         <Route path="/trips" component={Trips} />
         <Route path="/update/:id" component={Update} />
+        <Route path="/delete/:id" component={Delete} />
       </Layout>
     );
   }

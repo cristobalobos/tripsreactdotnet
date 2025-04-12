@@ -5,6 +5,7 @@ export class Trips extends Component {
         super(props);
 
         this.onTripUpdate = this.onTripUpdate.bind(this);
+        this.onTripDelete = this.onTripDelete.bind(this);
 
         this.state = {
             trips: [],
@@ -19,6 +20,11 @@ export class Trips extends Component {
     onTripUpdate(id) {
         const { history } = this.props;
         history.push('/update/' + id);
+    }
+
+    onTripDelete(id) {
+        const { history } = this.props;
+        history.push('/delete/' + id);
     }
 
     populateTripsData() {
@@ -48,19 +54,26 @@ export class Trips extends Component {
                                 <td>{trip.description}</td>
                                 <td>{new Date(trip.dateStarted).toISOString().slice(0, 10)}</td>
                                 <td>{trip.dateCompleted ? new Date(trip.dateCompleted).toISOString().slice(0, 10) : '-'}</td>
-                                <td>
-                                    <div className="form-group">
+                                <div className="form-group">
+                                    <td>
+
                                         <button onClick={() => this.onTripUpdate(trip.id)} className="btn btn-success">
                                             Update
                                         </button>
-                                    </div>
-                                </td>
+
+                                    </td>
+                                    <td>
+                                        <button onClick={() => this.onTripDelete(trip.id)} className="btn btn-danger">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </div>
                             </tr>
                         ))
                     }
 
                 </tbody>
-            </table>
+            </table >
         );
     }
 
