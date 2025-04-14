@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Globalization;
 
 namespace Trips.Data
 {
@@ -16,16 +17,31 @@ namespace Trips.Data
 
         public void AddTrip(Trip trip)
         {
-           // Data.Trips.Add(trip);
+            // Data.Trips.Add(trip);
+            /*
+
+
+            
+            // Console.WriteLine($"→ Trip recibido: {trip.Name} / {trip.DateStarted} / {trip.DateCompleted}");
+            Console.WriteLine($"→ Trip recibid");
+            */
+            Console.WriteLine($"→ Trip recibido Servicio");
+            trip.DateStarted = DateTime.ParseExact("20250410", "yyyyMMdd", CultureInfo.InvariantCulture);
+            trip.DateCompleted = trip.DateCompleted.HasValue
+                ? DateTime.ParseExact("20250410", "yyyyMMdd", CultureInfo.InvariantCulture)
+                : (DateTime?)null;
+
+
             _context.Trips.Add(trip);
             _context.SaveChanges();
         }
 
-        public List<Trip> GetAllTrips() {
-           var trips = _context.Trips.ToList();
-           Console.WriteLine($"[TripService] Se recuperaron {trips.Count} viajes desde la BD.");
-           return trips;
-           //return Data.Trips.ToList();
+        public List<Trip> GetAllTrips()
+        {
+            var trips = _context.Trips.ToList();
+            Console.WriteLine($"[TripService] Se recuperaron {trips.Count} viajes desde la BD.");
+            return trips;
+            //return Data.Trips.ToList();
         }
 
         public Trip GetTripById(int tripId) => _context.Trips.FirstOrDefault(t => t.Id == tripId);
@@ -33,7 +49,7 @@ namespace Trips.Data
         {
             var oldTrip = Data.Trips.FirstOrDefault(n => n.Id == tripId);
 
-            if(oldTrip != null)
+            if (oldTrip != null)
             {
                 oldTrip.Name = trip.Name;
                 oldTrip.Description = trip.Description;
@@ -41,10 +57,10 @@ namespace Trips.Data
                 oldTrip.DateCompleted = trip.DateCompleted;
             }
         }
-          public void DeleteTrip(int tripId)
+        public void DeleteTrip(int tripId)
         {
             var trip = Data.Trips.FirstOrDefault(n => n.Id == tripId);
-            if(trip != null)
+            if (trip != null)
             {
                 Data.Trips.Remove(trip);
             }
