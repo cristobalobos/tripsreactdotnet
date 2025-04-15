@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 export const Trips = () => {
     const [trips, setTrips] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState(""); // 🔍 Buscador
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,6 +24,12 @@ export const Trips = () => {
     const onTripDelete = (id) => {
         navigate('/delete/' + id);
     };
+
+    // 🧠 Aplicamos filtro antes de renderizar
+    const filteredTrips = trips.filter(trip =>
+        trip.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        trip.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const renderAllTripsTable = (trips) => (
         <div className="table-responsive shadow rounded mt-4">
@@ -61,13 +69,27 @@ export const Trips = () => {
         <div className="container mt-5">
             <h2 className="text-center mb-4">🌍 All Trips</h2>
             <p className="text-center">Here you can see all your saved trips.</p>
+
+            {/* 🔍 Buscador */}
+            <div className="row mb-3">
+                <div className="col-md-6 offset-md-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search trips by name or description..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+            </div>
+
             {loading ? (
                 <div className="text-center mt-5">
                     <div className="spinner-border text-primary" role="status" />
                     <p className="mt-2">Loading...</p>
                 </div>
             ) : (
-                renderAllTripsTable(trips)
+                renderAllTripsTable(filteredTrips)
             )}
         </div>
     );
