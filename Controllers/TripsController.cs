@@ -30,26 +30,10 @@ namespace Trips.Controllers
         [HttpPost("AddTrip")]
         public IActionResult AddTrip([FromBody] Trip trip)
         {
-            if (trip == null)
-            {
-                Console.WriteLine("❌ El trip vino como null (usaremos uno hardcodeado)");
+            Console.WriteLine($"🧪 Recibido trip: {System.Text.Json.JsonSerializer.Serialize(trip)}");
 
-                var hardcodedTrip = new Trip
-                {
-                    Name = "Puerto Varas, Chile",
-                    Description = "Ciudad del sur de Chile muy alemana",
-                    DateStarted = new DateTime(2025, 4, 10),
-                    DateCompleted = new DateTime(2025, 4, 15)
-                };
-
-                _service.AddTrip(hardcodedTrip);
-                Console.WriteLine("✅ Trip hardcodeado guardado");
-                return Ok("Trip hardcodeado guardado");
-            }
-
-            Console.WriteLine($"🛬 Recibido: {trip.Name}");
             _service.AddTrip(trip);
-            return Ok();
+            return Ok("Registro agregado con exito");
         }
 
         [HttpPut("UpdateTrip/{id}")]

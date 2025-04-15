@@ -57,40 +57,22 @@ export class Create extends Component {
         const { history } = this.props;
 
         // Create a new trip object with values from the form
-        /* let tripObject = {
-             Id: Math.floor(Math.random() * 1000), // Random ID (not ideal in real apps)
-             name: this.state.name,
-             description: this.state.description,
-             dateStarted: '20250101',//this.state.dateStarted,
-             dateCompleted: '20250110' //this.state.dateCompleted
-         }*/
-
         let tripObject = {
-            "Name": "Puerto Varas",
-            "Description": "Ciudad del sur de Chile",
-            "DateStarted": "2025-04-10 00:00:00",
-            "DateCompleted": "2025-04-15 00:00:00"
+            name: this.state.name,
+            description: this.state.description,
+            dateStarted: this.state.dateStarted,
+            dateCompleted: this.state.dateCompleted
         }
-
 
         // Send the trip to the API (backend)
         axios.post("api/Trips/AddTrip", tripObject, {
             headers: {
                 'Content-Type': 'application/json'
             }
-        })
+        });
+        history.push('/trips');
     }
 
-    handleChange = (e) => {
-        const { name, value } = e.target;
-
-        if (name === "dateStarted" || name === "dateCompleted") {
-            const formattedValue = value ? `${value} 00:00:00` : null;
-            this.setState({ [name]: formattedValue });
-        } else {
-            this.setState({ [name]: value });
-        }
-    }
 
     render() {
         return (

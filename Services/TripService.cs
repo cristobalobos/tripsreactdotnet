@@ -17,14 +17,7 @@ namespace Trips.Data
 
         public void AddTrip(Trip trip)
         {
-            // Data.Trips.Add(trip);
-            /*
 
-
-            
-            // Console.WriteLine($"→ Trip recibido: {trip.Name} / {trip.DateStarted} / {trip.DateCompleted}");
-            Console.WriteLine($"→ Trip recibid");
-            */
             Console.WriteLine($"→ Trip recibido Servicio");
             trip.DateStarted = DateTime.ParseExact("20250410", "yyyyMMdd", CultureInfo.InvariantCulture);
             trip.DateCompleted = trip.DateCompleted.HasValue

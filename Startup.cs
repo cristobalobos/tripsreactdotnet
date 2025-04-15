@@ -22,17 +22,24 @@ namespace travelsreactdotnet
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            // Agrega soporte para controladores + JSON case-insensitive
+            services.AddControllersWithViews()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                });
 
             // Configuración del DbContext
             services.AddDbContext<TripsDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            // Para servir archivos estáticos del frontend (React)
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
             });
 
+            // Inyección de dependencias para el servicio de viajes
             services.AddTransient<ITripService, TripService>();
         }
 
